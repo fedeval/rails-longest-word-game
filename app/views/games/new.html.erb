@@ -1,2 +1,11 @@
-<h1>Games#new</h1>
-<p>Find me in app/views/games/new.html.erb</p>
+<h1>New Game</h1>
+<ul class="list-inline letter-list"><% @letters.each do |letter|%>
+  <li class="letter list-inline-item"><%= letter %></li>  
+  <% end %> 
+</ul>
+<br>
+<form class="d-flex" action="/score" method="POST">
+  <input type="text" class="form-control">
+  <input type="submit" value="Check!" class="btn btn-primary">
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+</form>
