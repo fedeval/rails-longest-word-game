@@ -1,6 +1,8 @@
+# frozen_string_literal: false
 require 'open-uri'
 require 'json'
 
+# Controllers for new game user journey
 class GamesController < ApplicationController
   def new
     alphabet = ('A'..'Z').to_a
@@ -13,14 +15,13 @@ class GamesController < ApplicationController
   def score
     @letters = params[:letters]
     @word = params[:word].upcase
-    # raise
-    if !check_word(@word.downcase)
-      @result = "Sorry but #{@word} does not seem to be a valid English word.."
-    elsif word_is_valid?(@word.downcase, @letters.downcase)
-      @result = "Congratulations! #{@word} is a valid English word!"
-    else
-      @result = "Sorry but #{@word} can't be built out of #{@letters.chars.join(',')}"
-    end
+    @result = if !check_word(@word.downcase)
+                "Sorry but #{@word} does not seem to be a valid English word.."
+              elsif word_is_valid?(@word.downcase, @letters.downcase)
+                "Congratulations! #{@word} is a valid English word!"
+              else
+                "Sorry but #{@word} can't be built out of #{@letters.chars.join(',')}"
+              end
   end
 
   private
