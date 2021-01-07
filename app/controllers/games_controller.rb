@@ -10,21 +10,33 @@ class GamesController < ApplicationController
     10.times do
       @letters << alphabet.sample
     end
+    session[:score] = 0 if session[:score].nil?
   end
 
   def score
     @letters = params[:letters]
     @word = params[:word].upcase
-    @result = if !check_word(@word.downcase)
-                "Sorry but #{@word} does not seem to be a valid English word.."
-              elsif word_is_valid?(@word.downcase, @letters.downcase)
-                "Congratulations! #{@word} is a valid English word!"
-              else
-                "Sorry but #{@word} can't be built out of #{@letters.chars.join(',')}"
-              end
+    @result = compute_result(@word, @letters)
+    update_score if @result.length == 2
+    @total_score = session[:score]
   end
 
   private
+
+  def compute_result(attempt, grid)
+    if !check_word(attempt.downcase)
+      ["Sorry but #{attempt} does not seem to be a valid English word.."]
+    elsif word_is_valid?(attempt.downcase, grid.downcase)
+      ["Congratulations! #{attempt} is a valid English word!", attempt.length]
+    else
+      ["Sorry but #{attempt} can't be built out of #{grid.chars.join(',')}"]
+    end
+  end
+
+  def update_score
+    @word_score = @result[1]
+    session[:score] += @word_score
+  end
 
   def check_word(word)
     word_serialised = open("https://wagon-dictionary.herokuapp.com/#{word.downcase}").read

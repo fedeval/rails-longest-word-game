@@ -1,4 +1,6 @@
 <h1>Result</h1>
-<p><%= @result %></p>
+<p><%= @result[0] %></p>
 <br>
+<p>Word score: <%= @result.length == 2 ? @word_score : 0 %></p>
+<p>Total score: <%= @total_score %></p>
 <%= link_to "Try again", new_path %>
